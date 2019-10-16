@@ -7,15 +7,20 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.Observer
 import com.example.creaturemonmvvm.R
 import com.example.creaturemonmvvm.model.AttributeStore
+import com.example.creaturemonmvvm.model.AttributeType
 import com.example.creaturemonmvvm.model.AttributeValue
 import com.example.creaturemonmvvm.model.Avatar
 import com.example.creaturemonmvvm.view.avatar.AvatarBottomDialogFragment
 import com.example.creaturemonmvvm.view.avatar.AvatarListener
+import com.example.creaturemonmvvm.viewmodel.CreatureViewModel
 import kotlinx.android.synthetic.main.activity_creature.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class CreatureActivity : AppCompatActivity(), AvatarListener {
+    private val viewModel: CreatureViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +31,14 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
         setSpinnerListeners()
         setNameEditText()
         setClickListeners()
+        setCreatureLiveDataObserver()
     }
 
     private fun setUI() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        if (viewModel.isDrawableSelected()) {
+            hideTapLabel()
+        }
     }
 
     private fun setSpinnerAdapters() {
@@ -53,7 +62,7 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
     private fun setSpinnerListeners() {
         intelligenceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // TODO: handle selection
+                viewModel.attributeSelected(AttributeType.INTELLIGENCE, position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -61,7 +70,7 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
         }
         strengthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // TODO: handle selection
+                viewModel.attributeSelected(AttributeType.STRENGTH, position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -69,7 +78,7 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
         }
         enduranceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // TODO: handle selection
+                viewModel.attributeSelected(AttributeType.ENDURANCE, position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -86,7 +95,7 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // TODO: handle text changed
+                viewModel.nameChanged(s.toString())
             }
         })
     }
@@ -102,8 +111,15 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
         }
     }
 
+    private fun setCreatureLiveDataObserver() {
+        viewModel.getCreatureLiveData().observe(this, Observer { creature ->
+            hitPoints.text = creature.hitPoints.toString()
+            avatarImageView.setImageResource(creature.drawable)
+        })
+    }
+
     override fun avatarClicked(avatar: Avatar) {
-        // TODO: handle avatar clicked
+        viewModel.drawableSelected(avatar.drawable)
         hideTapLabel()
     }
 
