@@ -43,13 +43,65 @@ class CreatureViewModelTest {
     }
 
     @Test
-    fun cantSaveCreatureWithBlankName() {
+    fun testCantSaveCreatureWithBlankName() {
         with(creatureViewModel) {
             intelligence = 10
             strength = 3
             endurance = 7
             drawable = 2131165292
             name = ""
+        }
+
+        assertEquals(false, creatureViewModel.canSaveCreature())
+    }
+
+    @Test
+    fun testCantSaveCreatureWithoutIntelligence() {
+        with(creatureViewModel) {
+            intelligence = 0
+            strength = 3
+            endurance = 7
+            drawable = 2131165292
+            name = "Test Creature"
+        }
+
+        assertEquals(false, creatureViewModel.canSaveCreature())
+    }
+
+    @Test
+    fun testCantSaveCreatureWithoutStrength() {
+        with(creatureViewModel) {
+            intelligence = 10
+            strength = 0
+            endurance = 7
+            drawable = 2131165292
+            name = "Test Creature"
+        }
+
+        assertEquals(false, creatureViewModel.canSaveCreature())
+    }
+
+    @Test
+    fun testCantSaveCreatureWithoutEndurance() {
+        with(creatureViewModel) {
+            intelligence = 10
+            strength = 3
+            endurance = 0
+            drawable = 2131165292
+            name = "Test Creature"
+        }
+
+        assertEquals(false, creatureViewModel.canSaveCreature())
+    }
+
+    @Test
+    fun testCantSaveCreatureWithoutDrawable() {
+        with(creatureViewModel) {
+            intelligence = 10
+            strength = 3
+            endurance = 7
+            drawable = 0
+            name = "Test Creature"
         }
 
         assertEquals(false, creatureViewModel.canSaveCreature())
