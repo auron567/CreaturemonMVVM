@@ -21,7 +21,7 @@ val appModule = module {
     // CreatureRepository instance
     single<CreatureRepository> { provideRoomRepository(get()) }
     // CreatureViewModel instance
-    viewModel { provideCreatureViewModel(CreatureGenerator()) }
+    viewModel { provideCreatureViewModel(CreatureGenerator(), get()) }
 }
 
 private fun provideCreatureDatabase(application: Application): CreatureDatabase {
@@ -37,6 +37,9 @@ private fun provideRoomRepository(creatureDao: CreatureDao): RoomRepository {
     return RoomRepository(creatureDao)
 }
 
-private fun provideCreatureViewModel(generator: CreatureGenerator): CreatureViewModel {
-    return CreatureViewModel(generator)
+private fun provideCreatureViewModel(
+    generator: CreatureGenerator,
+    repository: CreatureRepository
+): CreatureViewModel {
+    return CreatureViewModel(generator, repository)
 }

@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import com.example.creaturemonmvvm.R
+import com.example.creaturemonmvvm.app.toast
 import com.example.creaturemonmvvm.model.AttributeStore
 import com.example.creaturemonmvvm.model.AttributeType
 import com.example.creaturemonmvvm.model.AttributeValue
@@ -107,7 +108,12 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
         }
 
         saveButton.setOnClickListener {
-            // TODO: handle save button clicked
+            if (viewModel.saveCreature()) {
+                toast(R.string.creature_saved)
+                finish()
+            } else {
+                toast(R.string.error_saving_creature)
+            }
         }
     }
 

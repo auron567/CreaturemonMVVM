@@ -6,7 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.creaturemonmvvm.model.*
 
-class CreatureViewModel(private val generator: CreatureGenerator) : ViewModel() {
+class CreatureViewModel(
+    private val generator: CreatureGenerator,
+    private val repository: CreatureRepository
+) : ViewModel() {
+
     private val creatureLiveData = MutableLiveData<Creature>()
     lateinit var creature: Creature
 
@@ -47,10 +51,25 @@ class CreatureViewModel(private val generator: CreatureGenerator) : ViewModel() 
         return drawable != 0
     }
 
+    fun saveCreature(): Boolean {
+        return if (canSaveCreature()) {
+            repository.saveCreature(creature)
+            true
+        } else {
+            false
+        }
+    }
+
     @VisibleForTesting
     fun updateCreature() {
         val attributes = CreatureAttributes(intelligence, strength, endurance)
         creature = generator.generateCreature(attributes, name, drawable)
         creatureLiveData.postValue(creature)
+    }
+
+    @VisibleForTesting
+    fun canSaveCreature(): Boolean {
+        return intelligence != 0 && strength != 0 && endurance != 0 &&
+                drawable != 0 && name.isNotBlank()
     }
 }
