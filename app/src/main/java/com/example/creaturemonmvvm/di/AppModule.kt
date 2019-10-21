@@ -7,6 +7,7 @@ import com.example.creaturemonmvvm.model.CreatureRepository
 import com.example.creaturemonmvvm.model.room.CreatureDao
 import com.example.creaturemonmvvm.model.room.CreatureDatabase
 import com.example.creaturemonmvvm.model.room.RoomRepository
+import com.example.creaturemonmvvm.viewmodel.AllCreaturesViewModel
 import com.example.creaturemonmvvm.viewmodel.CreatureViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
@@ -22,6 +23,8 @@ val appModule = module {
     single<CreatureRepository> { provideRoomRepository(get()) }
     // CreatureViewModel instance
     viewModel { provideCreatureViewModel(CreatureGenerator(), get()) }
+    // AllCreaturesViewModel instance
+    viewModel { provideAllCreaturesViewModel(get()) }
 }
 
 private fun provideCreatureDatabase(application: Application): CreatureDatabase {
@@ -42,4 +45,8 @@ private fun provideCreatureViewModel(
     repository: CreatureRepository
 ): CreatureViewModel {
     return CreatureViewModel(generator, repository)
+}
+
+private fun provideAllCreaturesViewModel(repository: CreatureRepository): AllCreaturesViewModel {
+    return AllCreaturesViewModel(repository)
 }

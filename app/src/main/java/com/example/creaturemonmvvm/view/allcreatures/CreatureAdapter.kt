@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.creaturemonmvvm.R
 import com.example.creaturemonmvvm.app.inflate
 import com.example.creaturemonmvvm.model.Creature
+import kotlinx.android.synthetic.main.list_item_creature.view.*
 
 class CreatureAdapter(private val creatures: MutableList<Creature>)
     : RecyclerView.Adapter<CreatureAdapter.ViewHolder>() {
@@ -32,7 +33,11 @@ class CreatureAdapter(private val creatures: MutableList<Creature>)
         fun bind(creature: Creature) {
             this.creature = creature
 
-            // TODO: populate views
+            with(itemView) {
+                avatarImageView.setImageResource(creature.drawable)
+                name.text = creature.name
+                hitPoints.text = creature.hitPoints.toString()
+            }
         }
     }
 }
