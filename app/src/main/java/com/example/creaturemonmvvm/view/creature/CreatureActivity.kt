@@ -7,9 +7,11 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.creaturemonmvvm.R
 import com.example.creaturemonmvvm.app.toast
+import com.example.creaturemonmvvm.databinding.ActivityCreatureBinding
 import com.example.creaturemonmvvm.model.AttributeStore
 import com.example.creaturemonmvvm.model.AttributeType
 import com.example.creaturemonmvvm.model.AttributeValue
@@ -23,16 +25,19 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class CreatureActivity : AppCompatActivity(), AvatarListener {
     private val viewModel: CreatureViewModel by viewModel()
 
+    private lateinit var binding: ActivityCreatureBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_creature)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_creature)
+        binding.viewmodel = viewModel
 
         setUI()
         setSpinnerAdapters()
         setSpinnerListeners()
         setNameEditText()
         setClickListeners()
-        setCreatureLiveDataObserver()
+        setLiveDataObservers()
     }
 
     private fun setUI() {
@@ -106,21 +111,21 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
             val bottomDialogFragment = AvatarBottomDialogFragment.newInstance()
             bottomDialogFragment.show(supportFragmentManager, "AvatarBottomDialogFragment")
         }
+    }
 
-        saveButton.setOnClickListener {
-            if (viewModel.saveCreature()) {
+    private fun setLiveDataObservers() {
+        viewModel.getCreatureLiveData().observe(this, Observer { creature ->
+            hitPoints.text = creature.hitPoints.toString()
+            avatarImageView.setImageResource(creature.drawable)
+        })
+
+        viewModel.getSaveLiveData().observe(this, Observer { saved ->
+            if (saved) {
                 toast(R.string.creature_saved)
                 finish()
             } else {
                 toast(R.string.error_saving_creature)
             }
-        }
-    }
-
-    private fun setCreatureLiveDataObserver() {
-        viewModel.getCreatureLiveData().observe(this, Observer { creature ->
-            hitPoints.text = creature.hitPoints.toString()
-            avatarImageView.setImageResource(creature.drawable)
         })
     }
 
