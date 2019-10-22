@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.creaturemonmvvm.app.Event
 import com.example.creaturemonmvvm.model.*
 
 class CreatureViewModel(
@@ -11,7 +12,7 @@ class CreatureViewModel(
     private val repository: CreatureRepository
 ) : ViewModel() {
 
-    private val saveLiveData = MutableLiveData<Boolean>()
+    private val saveLiveData = MutableLiveData<Event<Boolean>>()
     private val creatureLiveData = MutableLiveData<Creature>()
     lateinit var creature: Creature
 
@@ -21,7 +22,7 @@ class CreatureViewModel(
     var endurance = 0
     var drawable = 0
 
-    fun getSaveLiveData(): LiveData<Boolean> {
+    fun getSaveLiveData(): LiveData<Event<Boolean>> {
         return saveLiveData
     }
 
@@ -59,9 +60,9 @@ class CreatureViewModel(
     fun saveCreature() {
         if (canSaveCreature()) {
             repository.saveCreature(creature)
-            saveLiveData.postValue(true)
+            saveLiveData.postValue(Event(true))
         } else {
-            saveLiveData.postValue(false)
+            saveLiveData.postValue(Event(false))
         }
     }
 

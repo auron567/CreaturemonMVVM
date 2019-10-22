@@ -119,12 +119,14 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
             avatarImageView.setImageResource(creature.drawable)
         })
 
-        viewModel.getSaveLiveData().observe(this, Observer { saved ->
-            if (saved) {
-                toast(R.string.creature_saved)
-                finish()
-            } else {
-                toast(R.string.error_saving_creature)
+        viewModel.getSaveLiveData().observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { saved ->
+                if (saved) {
+                    toast(R.string.creature_saved)
+                    finish()
+                } else {
+                    toast(R.string.error_saving_creature)
+                }
             }
         })
     }
