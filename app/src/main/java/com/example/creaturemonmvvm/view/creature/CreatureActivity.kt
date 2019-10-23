@@ -114,12 +114,12 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
     }
 
     private fun setLiveDataObservers() {
-        viewModel.getCreatureLiveData().observe(this, Observer { creature ->
+        viewModel.creatureLiveData.observe(this, Observer { creature ->
             hitPoints.text = creature.hitPoints.toString()
             avatarImageView.setImageResource(creature.drawable)
         })
 
-        viewModel.getSaveLiveData().observe(this, Observer { event ->
+        viewModel.saveLiveData.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { saved ->
                 if (saved) {
                     toast(R.string.creature_saved)

@@ -12,23 +12,20 @@ class CreatureViewModel(
     private val repository: CreatureRepository
 ) : ViewModel() {
 
-    private val saveLiveData = MutableLiveData<Event<Boolean>>()
-    private val creatureLiveData = MutableLiveData<Creature>()
-    lateinit var creature: Creature
+    private val _saveLiveData = MutableLiveData<Event<Boolean>>()
+    private val _creatureLiveData = MutableLiveData<Creature>()
 
+    val saveLiveData: LiveData<Event<Boolean>>
+        get() = _saveLiveData
+    val creatureLiveData: LiveData<Creature>
+        get() = _creatureLiveData
+
+    lateinit var creature: Creature
     var name = ""
     var intelligence = 0
     var strength = 0
     var endurance = 0
     var drawable = 0
-
-    fun getSaveLiveData(): LiveData<Event<Boolean>> {
-        return saveLiveData
-    }
-
-    fun getCreatureLiveData(): LiveData<Creature> {
-        return creatureLiveData
-    }
 
     fun attributeSelected(attributeType: AttributeType, position: Int) {
         when (attributeType) {
@@ -60,9 +57,9 @@ class CreatureViewModel(
     fun saveCreature() {
         if (canSaveCreature()) {
             repository.saveCreature(creature)
-            saveLiveData.postValue(Event(true))
+            _saveLiveData.postValue(Event(true))
         } else {
-            saveLiveData.postValue(Event(false))
+            _saveLiveData.postValue(Event(false))
         }
     }
 
@@ -70,7 +67,7 @@ class CreatureViewModel(
     fun updateCreature() {
         val attributes = CreatureAttributes(intelligence, strength, endurance)
         creature = generator.generateCreature(attributes, name, drawable)
-        creatureLiveData.postValue(creature)
+        _creatureLiveData.postValue(creature)
     }
 
     @VisibleForTesting
