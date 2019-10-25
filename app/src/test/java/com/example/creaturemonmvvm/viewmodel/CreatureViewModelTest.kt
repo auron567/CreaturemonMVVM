@@ -17,7 +17,7 @@ class CreatureViewModelTest {
     @get:Rule
     val rule: TestRule = InstantTaskExecutorRule()
 
-    private val mockGenerator: CreatureGenerator = mockk()
+    private val mockGenerator: CreatureGenerator = mockk(relaxed = true)
     private val mockRepository: CreatureRepository = mockk()
     private lateinit var creatureViewModel: CreatureViewModel
 
@@ -49,7 +49,7 @@ class CreatureViewModelTest {
             strength = 3
             endurance = 7
             drawable = 2131165292
-            name = ""
+            name.set("")
         }
 
         assertEquals(false, creatureViewModel.canSaveCreature())
@@ -62,7 +62,7 @@ class CreatureViewModelTest {
             strength = 3
             endurance = 7
             drawable = 2131165292
-            name = "Test Creature"
+            name.set("Test Creature")
         }
 
         assertEquals(false, creatureViewModel.canSaveCreature())
@@ -75,7 +75,7 @@ class CreatureViewModelTest {
             strength = 0
             endurance = 7
             drawable = 2131165292
-            name = "Test Creature"
+            name.set("Test Creature")
         }
 
         assertEquals(false, creatureViewModel.canSaveCreature())
@@ -88,7 +88,7 @@ class CreatureViewModelTest {
             strength = 3
             endurance = 0
             drawable = 2131165292
-            name = "Test Creature"
+            name.set("Test Creature")
         }
 
         assertEquals(false, creatureViewModel.canSaveCreature())
@@ -101,7 +101,7 @@ class CreatureViewModelTest {
             strength = 3
             endurance = 7
             drawable = 0
-            name = "Test Creature"
+            name.set("Test Creature")
         }
 
         assertEquals(false, creatureViewModel.canSaveCreature())

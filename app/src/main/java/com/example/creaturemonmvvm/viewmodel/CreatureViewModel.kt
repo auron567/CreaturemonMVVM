@@ -1,6 +1,8 @@
 package com.example.creaturemonmvvm.viewmodel
 
 import androidx.annotation.VisibleForTesting
+import androidx.databinding.Observable
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,11 +23,17 @@ class CreatureViewModel(
         get() = _creatureLiveData
 
     lateinit var creature: Creature
-    var name = ""
     var intelligence = 0
     var strength = 0
     var endurance = 0
     var drawable = 0
+    val name = ObservableField<String>("").apply {
+        addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                updateCreature()
+            }
+        })
+    }
 
     fun attributeSelected(attributeType: AttributeType, position: Int) {
         when (attributeType) {
@@ -37,11 +45,6 @@ class CreatureViewModel(
                 endurance = AttributeStore.ENDURANCE[position].value
         }
 
-        updateCreature()
-    }
-
-    fun nameChanged(name: String) {
-        this.name = name
         updateCreature()
     }
 
@@ -66,13 +69,17 @@ class CreatureViewModel(
     @VisibleForTesting
     fun updateCreature() {
         val attributes = CreatureAttributes(intelligence, strength, endurance)
-        creature = generator.generateCreature(attributes, name, drawable)
+        creature = generator.generateCreature(attributes, name.get() ?: "", drawable)
         _creatureLiveData.postValue(creature)
     }
 
     @VisibleForTesting
     fun canSaveCreature(): Boolean {
-        return intelligence != 0 && strength != 0 && endurance != 0 &&
-                drawable != 0 && name.isNotBlank()
+        val name = name.get()
+        name?.let {
+            return intelligence != 0 && strength != 0 && endurance != 0 &&
+                    drawable != 0 && name.isNotBlank()
+        }
+        return false
     }
 }

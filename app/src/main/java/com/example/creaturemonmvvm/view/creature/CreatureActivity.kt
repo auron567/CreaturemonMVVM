@@ -2,8 +2,6 @@ package com.example.creaturemonmvvm.view.creature
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -35,7 +33,6 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
         setUI()
         setSpinnerAdapters()
         setSpinnerListeners()
-        setNameEditText()
         setClickListeners()
         setLiveDataObservers()
     }
@@ -90,20 +87,6 @@ class CreatureActivity : AppCompatActivity(), AvatarListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
-    }
-
-    private fun setNameEditText() {
-        nameEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.nameChanged(s.toString())
-            }
-        })
     }
 
     private fun setClickListeners() {
