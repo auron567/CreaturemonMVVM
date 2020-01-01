@@ -6,21 +6,31 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.creaturemonmvvm.R
+import com.example.creaturemonmvvm.app.CreaturemonApplication
 import com.example.creaturemonmvvm.view.creature.CreatureActivity
 import com.example.creaturemonmvvm.viewmodel.AllCreaturesViewModel
 import kotlinx.android.synthetic.main.activity_all_creatures.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
 class AllCreaturesActivity : AppCompatActivity() {
-    private val viewModel: AllCreaturesViewModel by viewModel()
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: AllCreaturesViewModel
 
     private val adapter = CreatureAdapter(mutableListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as CreaturemonApplication).appComponent
+            .allCreaturesComponent().create().inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_creatures)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(AllCreaturesViewModel::class.java)
 
         setCreaturesRecyclerView()
         setAllCreaturesLiveDataObserver()

@@ -8,8 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.creaturemonmvvm.app.Event
 import com.example.creaturemonmvvm.model.*
+import javax.inject.Inject
 
-class CreatureViewModel(
+class CreatureViewModel @Inject constructor(
     private val generator: CreatureGenerator,
     private val repository: CreatureRepository
 ) : ViewModel() {

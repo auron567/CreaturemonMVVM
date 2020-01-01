@@ -40,8 +40,9 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    // Koin
-    implementation "org.koin:koin-android-viewmodel:$koin_version"
+    // Dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
     // Test
     testImplementation 'junit:junit:4.12'
     testImplementation "io.mockk:mockk:$mockk_version"

@@ -1,6 +1,8 @@
 package com.example.creaturemonmvvm.model
 
-class CreatureGenerator {
+import javax.inject.Inject
+
+class CreatureGenerator @Inject constructor() {
 
     fun generateCreature(attributes: CreatureAttributes, name: String = "", drawable: Int = 0): Creature {
         val hitPoints = with(attributes) {
